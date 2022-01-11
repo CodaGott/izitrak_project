@@ -1,0 +1,19 @@
+jwt:
+  secret: '9a02115a835ee03d5fb83cd8a468ea33e4090aec87f53c9FG54512bf4db8dc656c82a315fa0c785c08b0134716b81dcd0153d2a7556f2e154912cf5674F'
+
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/izitrak_db
+    username: root
+    password: material4u@
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
