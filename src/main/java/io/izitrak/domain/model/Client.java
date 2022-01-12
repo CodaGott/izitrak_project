@@ -21,7 +21,7 @@ public class Client {
     @Column(nullable = false)
     private LocalDate startDate;
     @Column(nullable = false)
-    private Integer paymentReminderDate;
+    private Long paymentReminderDate;
     @Column(nullable = false)
     private LocalDate clientBirthday;
     private LocalDate clientAnniversary;
@@ -84,11 +84,11 @@ public class Client {
         this.startDate = startDate;
     }
 
-    public Integer getPaymentReminderDate() {
+    public Long getPaymentReminderDate() {
         return paymentReminderDate;
     }
 
-    public void setPaymentReminderDate(Integer paymentReminderDate) {
+    public void setPaymentReminderDate(Long paymentReminderDate) {
         this.paymentReminderDate = paymentReminderDate;
     }
 

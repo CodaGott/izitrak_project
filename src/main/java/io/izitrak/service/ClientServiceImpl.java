@@ -4,13 +4,19 @@ import io.izitrak.domain.dto.ClientDto;
 import io.izitrak.domain.model.Client;
 import io.izitrak.exception.ClientException;
 import io.izitrak.repository.ClientRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientServiceImpl implements ClientService{
+@Slf4j
+@Service
+public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -23,7 +29,7 @@ public class ClientServiceImpl implements ClientService{
     public Client addClient(Long userId, ClientDto clientDto) throws ClientException {
         Client client = new Client();
         Optional<Client> optionalClient = clientRepository.findByEmail(clientDto.getEmail());
-        if (optionalClient.isPresent()){
+        if (optionalClient.isPresent()) {
             throw new ClientException("Client with email already exist");
         }
         modelMapper.map(clientDto, client);
@@ -50,40 +56,52 @@ public class ClientServiceImpl implements ClientService{
 
     private Client findClientById(Long clientId) throws ClientException {
 
-        if (clientRepository.findById(clientId).isEmpty()){
+        if (clientRepository.findById(clientId).isEmpty()) {
             throw new ClientException("Client with Id does not exist");
-        }else {
+        } else {
             return clientRepository.findById(clientId).orElseThrow();
         }
     }
 
     @Override
-    public Client getClientByNameOrUsernameOrEmail(String username, String firstName, String lastName, String email) {
-        return null;
+    public Client getClientByNameOrUsernameOrEmail(String firstName, String lastName, String email) {
+        return (Client) clientRepository.findByFirstNameOrLastNameOrEmail(firstName, lastName, email);
     }
 
     @Override
     public List<Client> getAllClients() {
-        return null;
+        return clientRepository.findAll();
     }
 
     @Override
     public List<Client> getAllAboutToExpireClient() {
-        return null;
+        List<Client> aboutToExpireClients = clientRepository.findAll();
+
+        for (Client client : aboutToExpireClients) {
+            LocalDate dateBefore = client.getStartDate();
+            LocalDate dateAfter = client.getExpiringDate();
+            long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+            log.info("days: {}", noOfDaysBetween);
+            if (noOfDaysBetween == client.getPaymentReminderDate()) {
+                aboutToExpireClients.add(client);
+            }
+        }
+        return aboutToExpireClients;
     }
 
-    @Override
-    public List<Client> getAllExpiredClient() {
-        return null;
-    }
+        @Override
+        public List<Client> getAllExpiredClient () {
+            return null;
+        }
 
-    @Override
-    public List<Client> getAllActiveClients() {
-        return null;
-    }
+        @Override
+        public List<Client> getAllActiveClients () {
+            return null;
+        }
 
-    @Override
-    public void deleteClient(Long clientId) {
+        @Override
+        public void deleteClient (Long clientId){
 
-    }
+        }
+
 }
