@@ -16,6 +16,6 @@ public interface ClientService {
     List<Client> getAllAboutToExpireClient();
     List<Client> getAllExpiredClient();
     List<Client>getAllActiveClients();
-    void deleteClient(Long clientId);
+    void deleteClient(Long clientId) throws ClientException;
 
 }

@@ -91,16 +91,38 @@ public class ClientServiceImpl implements ClientService {
 
         @Override
         public List<Client> getAllExpiredClient () {
-            return null;
+            List<Client> expiredClients = clientRepository.findAll();
+
+            for (Client client : expiredClients){
+                LocalDate dateBefore = client.getStartDate();
+                LocalDate dateAfter = client.getExpiringDate();
+                long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+                if (noOfDaysBetween <= 0){
+                    expiredClients.add(client);
+                }
+            }
+            return expiredClients;
         }
 
         @Override
         public List<Client> getAllActiveClients () {
-            return null;
+        List<Client> activeClients = clientRepository.findAll();
+
+        for (Client client : activeClients){
+            LocalDate dateBefore = client.getStartDate();
+            LocalDate dateAfter = client.getExpiringDate();
+            long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+            if (noOfDaysBetween > 0){
+                activeClients.add(client);
+            }
+        }
+            return activeClients;
         }
 
         @Override
-        public void deleteClient (Long clientId){
+        public void deleteClient (Long clientId) throws ClientException {
+        Client clientToDelete = findClientById(clientId);
+        clientRepository.delete(clientToDelete);
 
         }
 
