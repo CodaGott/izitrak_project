@@ -1,6 +1,6 @@
 # izitrak project
 
-A software system that allows Personal Trainers and gym to owners to easily monitor their clients payment status and send a mail when due. This software system will also help improve customer experience for the businesses using it as it will help automate sending emails to the clients on their birthday and other specified anniversary.
+A software system that allows Personal Trainers and gym to owners to easily monitor their clients payment status and send a mail when due. This software system will also help improve customer experience for the businesses using it, as it will help automate sending emails to the clients on their birthday and other specified anniversary.
 
 #User Can
 
