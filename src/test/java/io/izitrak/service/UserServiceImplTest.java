@@ -109,6 +109,14 @@ class UserServiceImplTest {
 
     @Test
     void testUserCanBeFoundUsingEmail(){
+        User user = new User();
+        user.setEmail("me@mail.com");
+        user.setId(8L);
 
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        User result = userService.findUserByEmail(user.getEmail());
+
+        assertThat(result).isEqualTo(user);
     }
 }
