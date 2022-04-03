@@ -4,13 +4,14 @@ import io.izitrak.domain.dto.UserDto;
 import io.izitrak.domain.model.User;
 import io.izitrak.exception.UserException;
 import io.izitrak.repository.UserRepository;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
-
+@NoArgsConstructor
 public class UserServiceImpl implements UserService{
 
     @Autowired
@@ -21,6 +22,10 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
 
     @Override
@@ -61,7 +66,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUser(Long userId) throws UserException {
-        User userToDelete = findUserById(userId);
+        User userToDelete = userRepository.findById(userId).orElseThrow(() -> new UserException("User not found"));
         userRepository.delete(userToDelete);
     }
 }
