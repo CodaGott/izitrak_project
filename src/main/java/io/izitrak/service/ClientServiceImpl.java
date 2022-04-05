@@ -2,8 +2,10 @@ package io.izitrak.service;
 
 import io.izitrak.domain.dto.ClientDto;
 import io.izitrak.domain.model.Client;
+import io.izitrak.domain.model.User;
 import io.izitrak.exception.ClientException;
 import io.izitrak.repository.ClientRepository;
+import io.izitrak.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -24,16 +27,33 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    public ClientServiceImpl(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
 
     @Override
     public Client addClient(Long userId, ClientDto clientDto) throws ClientException {
         Client client = new Client();
         Optional<Client> optionalClient = clientRepository.findByEmail(clientDto.getEmail());
+        Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalClient.isPresent()) {
             throw new ClientException("Client with email already exist");
         }
-        modelMapper.map(clientDto, client);
-        return clientRepository.save(client);
+        if (optionalUser.isPresent()){
+            modelMapper.map(clientDto, client);
+            User user = optionalUser.get();
+            Client savedClient = clientRepository.save(client);
+            user.addClients(savedClient);
+            userRepository.save(user);
+            return savedClient;
+        }
+        else {
+            throw new NoSuchElementException("User does not exist");
+        }
     }
 
     @Override

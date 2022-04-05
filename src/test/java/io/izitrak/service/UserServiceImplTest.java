@@ -16,9 +16,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -104,7 +107,19 @@ class UserServiceImplTest {
 
     @Test
     void testUsersCanBeFound(){
+        List<User> users = new ArrayList<>();
 
+        User user1 = new User();
+        User user2 = new User();
+
+        user1.setEmail("user1@email.com");
+        user2.setEmail("user2@email.com");
+        users.add(user1);
+        users.add(user2);
+
+        when(userRepository.findAll()).thenReturn(users);
+
+        assertEquals(2, userService.getAllUsers().size());
     }
 
     @Test
