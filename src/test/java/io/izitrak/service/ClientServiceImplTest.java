@@ -100,6 +100,17 @@ class ClientServiceImplTest {
     }
 
     @Test
-    void deleteClient() {
+    void deleteClient() throws ClientException {
+        //Given
+        Client client1 = new Client();
+
+        client1.setFirstName("John Doe");
+        client1.setEmail("client1@email.com");
+        client1.setId(9L);
+
+        when(clientRepository.findById(client1.getId())).thenReturn(Optional.of(client1));
+        clientService.deleteClient(client1.getId());
+
+        verify(clientRepository).deleteById(client1.getId());
     }
 }
