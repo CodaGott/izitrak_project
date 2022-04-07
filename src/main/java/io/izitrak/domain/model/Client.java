@@ -24,7 +24,7 @@ public class Client {
     @Column(nullable = false)
     private LocalDate startDate;
     @Column(nullable = false)
-    private Long paymentReminderDate;
+    private Integer paymentReminderDate;
     @Column(nullable = false)
     private LocalDate clientBirthday;
     private LocalDate clientAnniversary;

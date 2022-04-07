@@ -16,6 +16,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -126,17 +127,21 @@ public class ClientServiceImpl implements ClientService {
 
         @Override
         public List<Client> getAllActiveClients () {
-        List<Client> activeClients = clientRepository.findAll();
+//        List<Client> activeClients = new ArrayList<>();
+        List<Client> allClients = clientRepository.findAll();
 
-        for (Client client : activeClients){
-            LocalDate dateBefore = client.getStartDate();
-            LocalDate dateAfter = client.getExpiringDate();
-            long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-            if (noOfDaysBetween > 0){
-                activeClients.add(client);
-            }
-        }
-            return activeClients;
+//            for (Client client : allClients) {
+//                LocalDate dateBefore = client.getStartDate();
+//                LocalDate dateAfter = client.getExpiringDate();
+//                long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+//                if (noOfDaysBetween > 0) {
+//                    allClients.add(client);
+//                }
+//            }
+//            return allClients;
+
+            return allClients.stream().filter(client -> client.getExpiringDate()
+                    .isAfter(LocalDate.now())).collect(Collectors.toList());
         }
 
         @Override

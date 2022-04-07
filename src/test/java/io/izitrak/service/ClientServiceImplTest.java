@@ -16,9 +16,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -97,6 +101,30 @@ class ClientServiceImplTest {
 
     @Test
     void getAllActiveClients() {
+        Client client = new Client();
+        Client client1 = new Client();
+        Client client2 = new Client();
+
+        // EXPIRED CLIENT
+        client.setStartDate(LocalDate.of(2021, 3, 1));
+        client.setExpiringDate(LocalDate.of(2021, 12, 3));
+
+        // ACTIVE CLIENT
+        client1.setStartDate(LocalDate.of(2022, 1, 1));
+        client1.setExpiringDate(LocalDate.of(2022, 5, 1));
+
+        // EXPIRED CLIENT
+        client2.setStartDate(LocalDate.of(2022, 1, 1));
+        client2.setExpiringDate(LocalDate.of(2022, 3, 1));
+
+        List<Client> clients = new ArrayList<>();
+        clients.add(client);
+        clients.add(client1);
+        clients.add(client2);
+
+        when(clientRepository.findAll()).thenReturn(clients);
+
+        assertEquals(1, clientService.getAllActiveClients().size());
     }
 
     @Test
