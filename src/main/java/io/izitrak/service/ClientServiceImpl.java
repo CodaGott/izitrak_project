@@ -114,15 +114,18 @@ public class ClientServiceImpl implements ClientService {
         public List<Client> getAllExpiredClient () {
             List<Client> expiredClients = clientRepository.findAll();
 
-            for (Client client : expiredClients){
-                LocalDate dateBefore = client.getStartDate();
-                LocalDate dateAfter = client.getExpiringDate();
-                long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-                if (noOfDaysBetween <= 0){
-                    expiredClients.add(client);
-                }
-            }
-            return expiredClients;
+//            for (Client client : expiredClients){
+//                LocalDate dateBefore = client.getStartDate();
+//                LocalDate dateAfter = client.getExpiringDate();
+//                long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+//                if (noOfDaysBetween <= 0){
+//                    expiredClients.add(client);
+//                }
+//            }
+
+            return expiredClients.stream().filter(client -> client.getExpiringDate()
+                    .isBefore(LocalDate.now())).collect(Collectors.toList());
+//            return expiredClients;
         }
 
         @Override
