@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -85,10 +86,54 @@ class ClientServiceImplTest {
 
     @Test
     void getClientByNameOrUsernameOrEmail() {
+        // Given a list of clients
+        Client client = new Client();
+
+//        client3.setFirstName("Client3 first name");
+//        client3.setStartDate(LocalDate.of(2021, 1, 10));
+//        client3.setExpiringDate(LocalDate.of(2021, 9, 5));
+
+        Mockito.when(clientRepository.findByFirstName("Client3 first name")).thenReturn(Optional.of(client));
+
+        // assert that
+        assertEquals(client.getFirstName(), "Client3 first name");
     }
 
     @Test
     void getAllClients() {
+        // Given a list of clients
+        Client client1 = new Client();
+        Client client2 = new Client();
+        Client client3 = new Client();
+
+        LocalDate signUpDate = LocalDate.of(2021, 1, 10);
+
+        LocalDate expiresOn = LocalDate.of(2021, 12, 10);
+
+
+        client1.setFirstName("Client1 first name");
+        client1.setStartDate(signUpDate);
+        client1.setExpiringDate(expiresOn);
+
+
+        client2.setFirstName("Client2 first name");
+        client2.setStartDate(signUpDate);
+        client2.setExpiringDate(signUpDate.minusDays(1L));
+
+
+        client3.setFirstName("Client3 first name");
+        client3.setStartDate(LocalDate.of(2021, 1, 10));
+        client3.setExpiringDate(LocalDate.of(2021, 9, 5));
+
+        List<Client> myClients = new ArrayList<>();
+        myClients.add(client1);
+        myClients.add(client2);
+        myClients.add(client3);
+
+        when(clientRepository.findAll()).thenReturn(myClients);
+
+        // assert that
+        assertEquals(3, clientService.getAllClients().size());
     }
 
     @Test

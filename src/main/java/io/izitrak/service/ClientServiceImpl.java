@@ -89,6 +89,10 @@ public class ClientServiceImpl implements ClientService {
         return (Client) clientRepository.findByFirstNameOrLastNameOrEmail(firstName, lastName, email);
     }
 
+    public Client getClientByName(String firstName){
+        return (Client) clientRepository.findByFirstName(firstName);
+    }
+
     @Override
     public List<Client> getAllClients() {
         return clientRepository.findAll();
