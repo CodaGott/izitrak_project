@@ -90,7 +90,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     public Client getClientByName(String firstName){
-        return (Client) clientRepository.findByFirstName(firstName);
+        return clientRepository.findByFirstName(firstName)
+                .orElseThrow();
     }
 
     @Override

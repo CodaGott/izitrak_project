@@ -89,14 +89,13 @@ class ClientServiceImplTest {
         // Given a list of clients
         Client client = new Client();
 
-//        client3.setFirstName("Client3 first name");
-//        client3.setStartDate(LocalDate.of(2021, 1, 10));
-//        client3.setExpiringDate(LocalDate.of(2021, 9, 5));
+        client.setFirstName("Client3 first name");
 
-        Mockito.when(clientRepository.findByFirstName("Client3 first name")).thenReturn(Optional.of(client));
+        when(clientRepository.findByFirstName(anyString())).thenReturn(Optional.of(client));
+        Client result = clientService.getClientByName(client.getFirstName());
 
         // assert that
-        assertEquals(client.getFirstName(), "Client3 first name");
+        assertEquals(client.getFirstName(), result.getFirstName());
     }
 
     @Test
