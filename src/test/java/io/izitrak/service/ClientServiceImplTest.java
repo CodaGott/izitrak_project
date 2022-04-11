@@ -137,6 +137,44 @@ class ClientServiceImplTest {
 
     @Test
     void getAllAboutToExpireClient() {
+        Client client1 = new Client();
+        Client client2 = new Client();
+        Client client3 = new Client();
+
+        LocalDate signUpDate = LocalDate.of(2021, 1, 10);
+        LocalDate expiresOn = LocalDate.of(2022, 4, 18);
+
+        client1.setFirstName("Client1 first name");
+        client1.setStartDate(signUpDate);
+        client1.setExpiringDate(expiresOn);
+        client1.setPaymentReminderDate(7);
+
+
+        client2.setFirstName("Client2 first name");
+        client2.setStartDate(signUpDate);
+        client2.setExpiringDate(expiresOn);
+        client2.setPaymentReminderDate(7);
+
+        client3.setFirstName("Client3 first name");
+        client3.setStartDate(LocalDate.of(2021, 1, 10));
+        client3.setExpiringDate(LocalDate.of(2022, 4, 30));
+        client3.setPaymentReminderDate(7);
+
+        LocalDate a = LocalDate.of(2012, 6, 30);
+        LocalDate b = LocalDate.of(2012, 7, 1);
+        a.isBefore(b); // == true
+        a.isBefore(a); // == false
+        b.isBefore(a); // == false
+
+
+        List<Client> clients = new ArrayList<>();
+        clients.add(client1);
+        clients.add(client2);
+        clients.add(client3);
+
+        when(clientRepository.findAll()).thenReturn(clients);
+
+        assertEquals(2, clientService.getAllAboutToExpireClient().size());
     }
 
     @Test
@@ -158,7 +196,7 @@ class ClientServiceImplTest {
 
         client2.setFirstName("Client2 first name");
         client2.setStartDate(signUpDate);
-        client2.setExpiringDate(signUpDate.minusDays(1L));
+        client2.setExpiringDate(expiresOn);
 
 
         client3.setFirstName("Client3 first name");

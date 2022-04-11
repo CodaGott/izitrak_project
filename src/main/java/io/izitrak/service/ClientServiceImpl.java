@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -103,13 +104,15 @@ public class ClientServiceImpl implements ClientService {
     public List<Client> getAllAboutToExpireClient() {
         List<Client> aboutToExpireClients = clientRepository.findAll();
 
-        for (Client client : aboutToExpireClients) {
-            LocalDate dateBefore = client.getStartDate();
+        for (Iterator<Client> clientIterator = aboutToExpireClients.iterator(); clientIterator.hasNext();) {
+            Client client = clientIterator.next();
+
+            LocalDate dateBefore = LocalDate.now();
             LocalDate dateAfter = client.getExpiringDate();
             long noOfDaysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-            log.info("days: {}", noOfDaysBetween);
-            if (noOfDaysBetween == client.getPaymentReminderDate()) {
-                aboutToExpireClients.add(client);
+            log.info("number of days between them: dayBefore: {} dayAfter: {} noOfDayBetween: {}", dateBefore, dateAfter, noOfDaysBetween);
+            if (noOfDaysBetween != client.getPaymentReminderDate()) {
+                clientIterator.remove();
             }
         }
         return aboutToExpireClients;
@@ -129,7 +132,7 @@ public class ClientServiceImpl implements ClientService {
 //            }
 
             return expiredClients.stream().filter(client -> client.getExpiringDate()
-                    .isBefore(LocalDate.now())).collect(Collectors.toList());
+                    .isBefore(LocalDate.now()) || client.getExpiringDate().isEqual(LocalDate.now())).collect(Collectors.toList());
 //            return expiredClients;
         }
 
