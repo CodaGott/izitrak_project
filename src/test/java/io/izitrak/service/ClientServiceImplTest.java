@@ -24,8 +24,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ClientServiceImplTest {
@@ -78,10 +77,44 @@ class ClientServiceImplTest {
 
     @Test
     void updateClient() {
+        Client client = new Client();
+        client.setId(9L);
+        client.setFirstName("fName");
+        client.setStartDate(LocalDate.of(2022, 3, 3));
+
+        ClientDto clientDto = new ClientDto();
+        clientDto.setStartDate(LocalDate.of(2022, 4, 4));
+
+        clientService.updateClient(clientDto);
+        ArgumentCaptor<Client> argumentCaptor = ArgumentCaptor.forClass(Client.class);
+
+        verify(clientRepository, times(1)).save(argumentCaptor.capture());
+
+        Client capturedClient = argumentCaptor.getValue();
+
+        assertEquals(capturedClient.getStartDate(), clientDto.getStartDate());
     }
 
     @Test
-    void testUpdateClient() {
+    void testUpdateClient() throws ClientException {
+        Client client = new Client();
+        client.setId(9L);
+        client.setFirstName("fName");
+        client.setStartDate(LocalDate.of(2022, 3, 3));
+
+        ClientDto clientDto = new ClientDto();
+        clientDto.setStartDate(LocalDate.of(2022, 4, 4));
+
+        when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
+        clientService.updateClient(clientDto, 9L);
+        ArgumentCaptor<Client> clientArgumentCaptor = ArgumentCaptor.forClass(Client.class);
+
+        verify(clientRepository, times(1)).save(clientArgumentCaptor.capture());
+
+        Client captured = clientArgumentCaptor.getValue();
+
+
+        assertEquals(captured.getStartDate(), clientDto.getStartDate());
     }
 
     @Test
