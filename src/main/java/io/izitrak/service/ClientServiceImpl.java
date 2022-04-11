@@ -157,7 +157,7 @@ public class ClientServiceImpl implements ClientService {
 
         @Override
         public void deleteClient (Long clientId) throws ClientException {
-        Client clientToDelete = findClientById(clientId);
+        Client clientToDelete = clientRepository.findById(clientId).orElseThrow();
         clientRepository.delete(clientToDelete);
 
         }

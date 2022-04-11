@@ -254,6 +254,6 @@ class ClientServiceImplTest {
         when(clientRepository.findById(client1.getId())).thenReturn(Optional.of(client1));
         clientService.deleteClient(client1.getId());
 
-        verify(clientRepository).deleteById(client1.getId());
+        verify(clientRepository).delete(client1);
     }
 }
