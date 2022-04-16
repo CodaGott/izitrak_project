@@ -35,11 +35,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public User addUser(UserDto userDto) throws UserException {
         User user = new User();
-        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail().toLowerCase());
+        Optional<User> userCompany = userRepository.findByCompanyName(userDto.getCompanyName().toLowerCase());
         if (optionalUser.isPresent()){
             log.info("User with email already exists");
             throw new UserException("User with email already exist");
         }
+        if (userCompany.isPresent()){
+            log.info("User with same Company name already exists");
+            throw new UserException("User with same Company name already exists");
+        }
+
         modelMapper.map(userDto, user);
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("Saving User {}", user.getEmail());
