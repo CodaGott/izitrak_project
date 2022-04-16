@@ -6,10 +6,12 @@ import io.izitrak.payload.ApiResponse;
 import io.izitrak.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/user")
+@RestController
 public class UserController {
 
     @Autowired
@@ -28,8 +30,7 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers(){
-        userService.getAllUsers();
-        return new ResponseEntity<>(new ApiResponse(true, "Users found"), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.FOUND);
     }
 
     @GetMapping("/find-user/{email}")
@@ -69,5 +70,11 @@ public class UserController {
         }catch (UserException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @ResponseBody
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public String handleHttpMediaTypeNotAcceptableException() {
+        return "acceptable MIME type:" + MediaType.APPLICATION_JSON_VALUE;
     }
 }
