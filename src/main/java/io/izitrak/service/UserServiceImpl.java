@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService{
         if (userRepository.findById(userId).isEmpty()){
             throw new UserException("User with Id does not exist");
         }
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId).get();
     }
 
     @Override
@@ -60,8 +60,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow();
+    public User findUserByEmail(String email) throws UserException {
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isEmpty()){
+            throw new UserException("User with given email not found");
+        }
+        return user.get();
     }
 
     @Override

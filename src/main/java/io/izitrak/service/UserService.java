@@ -12,6 +12,6 @@ public interface UserService {
     User addUser(UserDto userDto) throws UserException;
     User updateUserInfo(UserDto newUserDetail, Long userId) throws UserException;
     List<User> getAllUsers();
-    User findUserByEmail(String email);
+    User findUserByEmail(String email) throws UserException;
     void deleteUser(Long userId) throws UserException;
 }

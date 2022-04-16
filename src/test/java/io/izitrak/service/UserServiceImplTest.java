@@ -123,7 +123,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testUserCanBeFoundUsingEmail(){
+    void testUserCanBeFoundUsingEmail() throws UserException {
         User user = new User();
         user.setEmail("me@mail.com");
         user.setId(8L);
